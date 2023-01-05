@@ -7,6 +7,7 @@
 #undef main
 #include "Renderer.h"
 
+
 using namespace dae;
 
 void ShutDown(SDL_Window* pWindow)
@@ -28,7 +29,7 @@ int main(int argc, char* args[])
 	const uint32_t height = 480;
 
 	SDL_Window* pWindow = SDL_CreateWindow(
-		"DirectX - ***Insert Name/Class***",
+		"DirectX - ***Osmanu Rafi/2DAE15***",
 		SDL_WINDOWPOS_UNDEFINED,
 		SDL_WINDOWPOS_UNDEFINED,
 		width, height, 0);
@@ -56,8 +57,8 @@ int main(int argc, char* args[])
 				isLooping = false;
 				break;
 			case SDL_KEYUP:
-				//Test for a key
-				//if (e.key.keysym.scancode == SDL_SCANCODE_X)
+				if (e.key.keysym.scancode == SDL_SCANCODE_F2)
+					pRenderer->ToggleTechniquePass();
 				break;
 			default: ;
 			}
