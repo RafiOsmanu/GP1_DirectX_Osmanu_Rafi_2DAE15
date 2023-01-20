@@ -29,8 +29,6 @@ namespace dae
 
 			//inverse the invView matrix variable
 			invViewMatrix = Matrix::Inverse(invViewMatrix);
-
-			
 		}
 
 		void calculateviewProjectionMatrix()
@@ -104,6 +102,11 @@ namespace dae
 		Matrix GetViewMatrix()
 		{
 			return viewMatrix;
+		}
+
+		Matrix GetInvViewMatrix()
+		{
+			return invViewMatrix;
 		}
 		Matrix GetProjectionMatrix()
 		{

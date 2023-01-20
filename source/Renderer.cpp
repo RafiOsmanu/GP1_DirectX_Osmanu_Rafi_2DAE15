@@ -24,29 +24,15 @@ namespace dae
 			std::cout << "DirectX initialization failed!\n";
 		}
 		
-		std::vector<Vertex_PosCol> vertices
-		{
-			/*{{ -3.0f,  3.0f, -2.0f},{},{ 0.0f, 0.0f}},
-			{{  0.0f,  3.0f, -2.0f},{},{ 0.5f, 0.0f}},
-			{{  3.0f,  3.0f, -2.0f},{},{ 1.0f, 0.0f}},
-			{{ -3.0f,  0.0f, -2.0f},{},{ 0.0f, 0.5f}},
-			{{  0.0f,  0.0f, -2.0f},{},{ 0.5f, 0.5f}},
-			{{  3.0f,  0.0f, -2.0f},{},{ 1.0f, 0.5f}},
-			{{ -3.0f, -3.0f, -2.0f},{},{ 0.0f, 1.0f}},
-			{{  0.0f, -3.0f, -2.0f},{},{ 0.5f, 1.0f}},
-			{{  3.0f, -3.0f, -2.0f},{},{ 1.0f, 1.0f}},*/
-		};
-
-		std::vector<uint32_t> indices
-		{ 
-			/*3,0,1,   1,4,3,   4,1,2,
-			2,5,4,   6,3,4,   4,7,6,
-			7,4,5,   5,8,7*/
-		};
-
-		Utils::ParseOBJ("Resources/vehicle.obj", vertices, indices);
 		
-		m_pMesh = new Mesh{ m_pDevice, vertices, indices };
+
+		
+
+		/*Utils::ParseOBJ("Resources/vehicle.obj", vertices, indices);
+		
+		m_pMesh = new Mesh{ m_pDevice, vertices, indices };*/
+
+		//m_pMeshCombustions = new Mesh{ m_pDevice, vertices, indices };
 
 	}
 
@@ -65,6 +51,7 @@ namespace dae
 		m_pDepthStencilBuffer->Release();
 		m_pSwapChain->Release();
 		delete m_pMesh;
+		//delete m_pMeshCombustions;
 		
 		
 	}
@@ -80,6 +67,7 @@ namespace dae
 
 		//2. Set PIPELINE + INVOKE DRAWCALLS (=RENDER)
 		m_pMesh->Render(m_pDeviceContext, m_pCamera.get());
+		//m_pMeshCombustions->Render(m_pDeviceContext, m_pCamera.get());
 
 		//3. PRESENT BACKBUFFER (SWAP)
 		m_pSwapChain->Present(0, 0);

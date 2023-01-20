@@ -2,7 +2,7 @@
 #include "pch.h"
 #include "Math.h"
 #include "vector"
-#include "Effect.h"
+#include "BaseMaterial.h"
 
 
 namespace dae
@@ -20,36 +20,58 @@ namespace dae
 	class Mesh
 	{
 	public:
-		Mesh(ID3D11Device* pDevice, const std::vector<Vertex_PosCol>& vertices, const std::vector<uint32_t>& indices)
-			:m_pEffect{ new Effect{ pDevice, L"Resources/PosCol3D.fx" } }
-			,m_pIndexBuffer{nullptr}
-			,m_pVertexBuffer{nullptr}
-			,m_numIndices{0}
+		Mesh(ID3D11Device* pDevice, const std::vector<Vertex_PosCol>& vertices, const std::vector<uint32_t>& indices, BaseMaterial* pMaterial)
+			: m_pIndexBuffer{nullptr}
+			, m_pVertexBuffer{nullptr}
+			, m_numIndices{0}
 		{
+			
 
 			//load Texture from file
-			m_pDiffuseTexture = m_pDiffuseTexture->LoadFromFile(pDevice, "Resources/vehicle_diffuse.png");
+			/*m_pDiffuseTexture = m_pDiffuseTexture->LoadFromFile(pDevice, "Resources/vehicle_diffuse.png");
+			m_pNormalTexture = m_pNormalTexture->LoadFromFile(pDevice, "Resources/vehicle_normal.png");
+			m_pSpecularTexture = m_pSpecularTexture->LoadFromFile(pDevice, "Resources/vehicle_specular.png");
+			m_pGlossinessTexture = m_pGlossinessTexture->LoadFromFile(pDevice, "Resources/vehicle_gloss.png");*/
 
-			//set texture to effectvariable
-			m_pEffect->SetDiffuseMapTexture(m_pDiffuseTexture.get());
+			//Combustion
+			//m_pDiffuseCombustionTexture = m_pDiffuseCombustionTexture->LoadFromFile(pDevice, "Resources/fireFX_diffuse.png");
+
+			//set texture to effect variable
+			/*m_pEffect->SetDiffuseMapTexture(m_pDiffuseTexture.get());
+			m_pEffect->SetNormalMapTexture(m_pNormalTexture.get());
+			m_pEffect->SetSpecularMapTexture(m_pSpecularTexture.get());
+			m_pEffect->SetGlossinessMapTexture(m_pGlossinessTexture.get());*/
+
+			//Combustion
+			//m_pMaterial->SetDiffuseMapTexture(m_pDiffuseCombustionTexture.get());
 
 			//Create Vertex Layout
-			static constexpr uint32_t numElements{ 3 };
+			static constexpr uint32_t numElements{ 5 };
 			D3D11_INPUT_ELEMENT_DESC vertexDesc[numElements]{};
 			vertexDesc[0].SemanticName = "POSITION";
-			vertexDesc[0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+			vertexDesc[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
 			vertexDesc[0].AlignedByteOffset = 0;
 			vertexDesc[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 
-			vertexDesc[1].SemanticName = "COLOR";
-			vertexDesc[1].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+			vertexDesc[1].SemanticName = "WORLD";
+			vertexDesc[1].Format = DXGI_FORMAT_R32G32B32_FLOAT;
 			vertexDesc[1].AlignedByteOffset = 12;
 			vertexDesc[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 
 			vertexDesc[2].SemanticName = "TEXCOORD";
-			vertexDesc[2].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+			vertexDesc[2].Format = DXGI_FORMAT_R32G32_FLOAT;
 			vertexDesc[2].AlignedByteOffset = 24;
 			vertexDesc[2].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+
+			vertexDesc[3].SemanticName = "NORMAL";
+			vertexDesc[3].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+			vertexDesc[3].AlignedByteOffset = 32;
+			vertexDesc[3].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+
+			vertexDesc[4].SemanticName = "TANGENT";
+			vertexDesc[4].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+			vertexDesc[4].AlignedByteOffset = 44;
+			vertexDesc[4].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 
 			
 
@@ -70,7 +92,7 @@ namespace dae
 
 			//Create Input Layout
 			D3DX11_PASS_DESC passDesc{};
-			m_pEffect->GetTechnique()->GetPassByIndex(0)->GetDesc(&passDesc);
+			//m_pEffect->GetTechnique()->GetPassByIndex(0)->GetDesc(&passDesc);
 
 				result = pDevice->CreateInputLayout(
 				vertexDesc,
@@ -100,11 +122,11 @@ namespace dae
 
 		~Mesh() 
 		{
-			delete m_pEffect;
+			//delete m_pEffect;
+			//delete  m_pMaterial;
 			m_pVertexBuffer->Release();
 			m_pIndexBuffer->Release();
 			m_pInputLayout->Release();
-			
 		}
 
 	
@@ -127,17 +149,20 @@ namespace dae
 
 			//5. update worldViewProjectMatrix
 			Matrix worldViewProjectionMatrix{ worldMatrix * pCamera->GetViewMatrix() * pCamera->GetProjectionMatrix()};
-			m_pEffect->SetMatrix(worldViewProjectionMatrix);
+			//m_pEffect->SetMatrix(worldViewProjectionMatrix, worldMatrix, pCamera->GetInvViewMatrix());
+			//m_pMaterial->SetMatrix(worldViewProjectionMatrix, worldMatrix, pCamera->GetInvViewMatrix());
 
 			//6. Draw
 			D3DX11_TECHNIQUE_DESC techDesc{};
 			//from my own Effect Class
-			m_pEffect->GetTechnique()->GetDesc(&techDesc);
+			//m_pEffect->GetTechnique()->GetDesc(&techDesc);
+			//m_pMaterial->GetTechnique()->GetDesc(&techDesc);
 
 			//for(UINT p = 0; p < techDesc.Passes; ++p)
 			{
 				//from my own Effect Class
-				m_pEffect->GetTechnique()->GetPassByIndex(pass)->Apply(0, pDeviceContext);
+				//m_pEffect->GetTechnique()->GetPassByIndex(pass)->Apply(0, pDeviceContext);
+				//m_pMaterial->GetTechnique()->GetPassByIndex(pass)->Apply(0, pDeviceContext);
 				pDeviceContext->DrawIndexed(m_numIndices, 0, 0);
 			}
 
@@ -149,12 +174,16 @@ namespace dae
 
 		Matrix worldMatrix{};
 	private:
-		Effect* m_pEffect;
 		ID3D11Buffer* m_pVertexBuffer;
 		ID3D11Buffer* m_pIndexBuffer;
 		ID3D11InputLayout* m_pInputLayout;
 		uint32_t m_numIndices;
-		std::unique_ptr<Texture> m_pDiffuseTexture{ nullptr };
+		std::vector<Vertex_PosCol> vertices{};
+		std::vector<uint32_t> indices{};
+
+		
+		std::unique_ptr<Texture> m_pDiffuseCombustionTexture{ nullptr };
+		
 		UINT pass{0};
 
 	};

@@ -50,6 +50,7 @@ namespace dae
 		std::unique_ptr<Camera> m_pCamera;
 
 		Mesh* m_pMesh;
+		Mesh* m_pMeshCombustions;
 
 		
 		

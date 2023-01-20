@@ -1,10 +1,10 @@
 #include "pch.h"
-#include "Effect.h"
+#include "BaseMaterial.h"
 #include <assert.h>
 
 namespace dae 
 {
-	Effect::Effect(ID3D11Device* pDevice, const std::wstring& assetFile)
+	BaseMaterial::BaseMaterial(ID3D11Device* pDevice, const std::wstring& assetFile)
 		:m_pEffect{ LoadEffect(pDevice, assetFile) }
 	{
 		//m_pTechnique = m_pEffect->GetTechniqueByIndex(0);
@@ -14,44 +14,49 @@ namespace dae
 			std::wcout << L"Technique not valid\n";
 		}
 
+		//worldviewprojectionMatrix
 		m_pMatWorldViewProjVariable = m_pEffect->GetVariableByName("gWorldViewProj")->AsMatrix();
 		if (!m_pMatWorldViewProjVariable->IsValid())
 		{
 			std::wcout << L"m_pMatWorldViewProjVariable not valid\n";
 		}
 
-		m_pDiffuseMapVariable = m_pEffect->GetVariableByName("gDiffuseMap")->AsShaderResource();
-		if (!m_pDiffuseMapVariable->IsValid())
+		//worldMatrix
+		m_pMatWorldVariable = m_pEffect->GetVariableByName("gWorldMatrix")->AsMatrix();
+		if (!m_pMatWorldVariable->IsValid())
 		{
-			std::wcout << L"m_pDiffuseMapVariable not valid\n";
+			std::wcout << L"m_pMatWorldVariable not valid\n";
 		}
+
+		//onb of camera/ inverse view
+		m_pMatInvViewVariable = m_pEffect->GetVariableByName("gViewInverseMatrix")->AsMatrix();
+		if (!m_pMatInvViewVariable->IsValid())
+		{
+			std::wcout << L"m_pMatInvViewVariable not valid\n";
+		}
+
 	}
 
-	Effect::~Effect()
+	BaseMaterial::~BaseMaterial()
 	{
 		m_pEffect->Release();
 	}
 
 
-	ID3DX11EffectTechnique* Effect::GetTechnique()
+	ID3DX11EffectTechnique* BaseMaterial::GetTechnique()
 	{
 		return m_pTechnique;
 	}
 
-	void Effect::SetMatrix(const Matrix& worldViewProjectMatrix)
+	void BaseMaterial::SetMatrix(const Matrix& worldViewProjectMatrix, const Matrix& worldMatrix, const Matrix& invViewMatrix)
 	{
 		m_pMatWorldViewProjVariable->SetMatrix(reinterpret_cast<const float*>(&worldViewProjectMatrix));
+		m_pMatWorldVariable->SetMatrix(reinterpret_cast<const float*>(&worldMatrix));
+		m_pMatInvViewVariable->SetMatrix(reinterpret_cast<const float*>(&invViewMatrix));
 	}
 
-	void Effect::SetDiffuseMapTexture(Texture* pDiffuseTexture)
-	{
-		if (m_pDiffuseMapVariable)
-		{
-			m_pDiffuseMapVariable->SetResource(pDiffuseTexture->GetResourceView());
-		}
-	}
 
-	ID3DX11Effect* Effect::LoadEffect(ID3D11Device* pDevice, const std::wstring& assetFile)
+	ID3DX11Effect* BaseMaterial::LoadEffect(ID3D11Device* pDevice, const std::wstring& assetFile)
 	{
 		HRESULT result;
 		ID3D10Blob* pErrorBlob{ nullptr };

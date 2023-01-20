@@ -81,7 +81,8 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ColorRGB.h" />
     <ClInclude Include="DataTypes.h" />
-    <ClInclude Include="Effect.h" />
+    <ClInclude Include="BaseMaterial.h" />
+    <ClInclude Include="MaterialVehicle.h" />
     <ClInclude Include="MathHelpers.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="pch.h" />
@@ -95,7 +96,8 @@
     <ClInclude Include="Vector4.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Effect.cpp" />
+    <ClCompile Include="BaseMaterial.cpp" />
+    <ClCompile Include="MaterialVehicle.cpp" />
     <ClCompile Include="Matrix.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h</PrecompiledHeaderFile>
