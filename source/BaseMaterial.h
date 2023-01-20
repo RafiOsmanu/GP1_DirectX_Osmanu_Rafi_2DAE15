@@ -3,6 +3,7 @@
 #include "Texture.h"
 
 namespace dae {
+
 	class BaseMaterial
 	{
 	public:

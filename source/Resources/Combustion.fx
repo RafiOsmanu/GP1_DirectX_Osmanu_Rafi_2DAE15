@@ -41,6 +41,32 @@ SamplerState samAnisotropic
 	AddressV = Wrap;//or mirror. clamp, border
 };
 
+RasterizerState gRasterizerState
+{
+    CullMode = none;
+    FrontCounterClockWise = false; //default
+};
+
+BlendState gBlendState
+{
+    BlendEnable[0] = true;
+    SrcBlend = src_alpha;
+    DestBlend = inv_src_alpha;
+	blendOp = add;
+    srcBlendAlpha = zero;
+    DestBlendAlpha = zero;
+    BlendOpAlpha = add;
+    RenderTargetWriteMask[0] = 0x0F;
+};
+
+DepthStencilState gDepthStencilState
+{
+    DepthEnable = true;
+    DepthWriteMask = zero;
+    DepthFunc = less;
+    StencilEnable = false;
+};
+
 //------------------------------------------------------------------
 // Input/Output Structs
 //------------------------------------------------------------------
@@ -78,40 +104,19 @@ VS_OUTPUT VS(VS_INPUT input)
 // Pixel Shader
 //------------------------------------------------------------------
 
-float4 PixelShading(SamplerState sampleState, VS_OUTPUT input)
-{
-	//diffuse reflectivity
-	const float kd = 1.f;
-
-	//observedArea
-	float observedArea = 0;
-    observedArea = saturate(dot(input.Normal, -gLightDirection));
-	
-	//Diffuse
-    const float4 lambertDiffuse = (kd * gDiffuseMap.Sample(sampleState, input.UV)) / gPi;
-
-    return (lambertDiffuse * gLightIntensity * observedArea);
-}
-
 float4 PS_Point(VS_OUTPUT input) : SV_TARGET
 {
-	//Output.RGBColor = g_MeshTexture.Sample(MeshTextureSampler, In.TextureUV) * In.Diffuse;
-	
-    //input.WorldPosition = PixelShading(samPoint, input);
-
-    return PixelShading(samPoint, input);
+    return gDiffuseMap.Sample(samPoint, input.UV);
 }
 
 float4 PS_Linear(VS_OUTPUT input) : SV_TARGET 
 {
-    //input.WorldPosition = PixelShading(samLinear, input);
-    return PixelShading(samLinear, input);
+    return gDiffuseMap.Sample(samLinear, input.UV);
 }
 
 float4 PS_Anisotropic(VS_OUTPUT input) : SV_TARGET 
 {
-    //input.WorldPosition = PixelShading(samAnisotropic, input);
-    return PixelShading(samAnisotropic, input);
+    return gDiffuseMap.Sample(samAnisotropic, input.UV);
 }
 
 //------------------------------------------------------------------
@@ -121,6 +126,9 @@ technique11 Techniques
 {
 	pass p0
 	{
+        SetRasterizerState(gRasterizerState);
+        SetDepthStencilState(gDepthStencilState, 0);
+        SetBlendState(gBlendState, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xFFFFFFFF);
 		SetVertexShader(CompileShader(vs_5_0, VS()));
 		SetGeometryShader(NULL);
 		SetPixelShader(CompileShader(ps_5_0, PS_Point()));
@@ -128,6 +136,9 @@ technique11 Techniques
 
 	pass p1
 	{
+        SetRasterizerState(gRasterizerState);
+        SetDepthStencilState(gDepthStencilState, 0);
+        SetBlendState(gBlendState, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xFFFFFFFF);
 		SetVertexShader(CompileShader(vs_5_0, VS()));
 		SetGeometryShader(NULL);
 		SetPixelShader(CompileShader(ps_5_0, PS_Linear()));
@@ -135,6 +146,9 @@ technique11 Techniques
 
 	pass p2
 	{
+        SetRasterizerState(gRasterizerState);
+        SetDepthStencilState(gDepthStencilState, 0);
+        SetBlendState(gBlendState, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xFFFFFFFF);
 		SetVertexShader(CompileShader(vs_5_0, VS()));
 		SetGeometryShader(NULL);
 		SetPixelShader(CompileShader(ps_5_0, PS_Anisotropic()));

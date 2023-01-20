@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Renderer.h"
-#include "Utils.h"
+
 
 namespace dae 
 {
@@ -26,13 +26,12 @@ namespace dae
 		
 		
 
-		
+		m_pVehicleMaterial = new MaterialVehicle{ m_pDevice, L"Resources/PosCol3D.fx" };
+		m_pMesh = new Mesh{ m_pDevice, "Resources/vehicle.obj", m_pVehicleMaterial};
 
-		/*Utils::ParseOBJ("Resources/vehicle.obj", vertices, indices);
-		
-		m_pMesh = new Mesh{ m_pDevice, vertices, indices };*/
 
-		//m_pMeshCombustions = new Mesh{ m_pDevice, vertices, indices };
+		m_pCombustionMat = new MaterialCombustion{ m_pDevice,L"Resources/Combustion.fx" };
+		m_pMeshCombustions = new Mesh{ m_pDevice, "Resources/fireFX.obj", m_pCombustionMat };
 
 	}
 
@@ -51,7 +50,8 @@ namespace dae
 		m_pDepthStencilBuffer->Release();
 		m_pSwapChain->Release();
 		delete m_pMesh;
-		//delete m_pMeshCombustions;
+		delete m_pMeshCombustions;
+		
 		
 		
 	}
@@ -67,7 +67,7 @@ namespace dae
 
 		//2. Set PIPELINE + INVOKE DRAWCALLS (=RENDER)
 		m_pMesh->Render(m_pDeviceContext, m_pCamera.get());
-		//m_pMeshCombustions->Render(m_pDeviceContext, m_pCamera.get());
+		m_pMeshCombustions->Render(m_pDeviceContext, m_pCamera.get());
 
 		//3. PRESENT BACKBUFFER (SWAP)
 		m_pSwapChain->Present(0, 0);

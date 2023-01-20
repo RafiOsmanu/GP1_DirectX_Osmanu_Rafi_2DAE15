@@ -15,7 +15,7 @@ namespace dae
 
 		Texture(ID3D11Device* pDevice, SDL_Surface* pSurface);
 		~Texture();
-		std::unique_ptr<Texture> LoadFromFile(ID3D11Device* pDevice, const std::string& path);
+		static std::unique_ptr<Texture> LoadFromFile(ID3D11Device* pDevice, const std::string& path);
 		void ResourceCreation(ID3D11Device* pDevice, SDL_Surface* pSurface);
 		ID3D11ShaderResourceView* GetResourceView();
 

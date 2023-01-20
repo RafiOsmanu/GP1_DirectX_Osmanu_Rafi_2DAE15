@@ -1,7 +1,9 @@
 #pragma once
-#include "DataTypes.h"
 #include "Texture.h"
 #include "Camera.h"
+#include "MaterialVehicle.h"
+#include "MaterialCombustion.h"
+#include "Mesh.h"
 
 struct SDL_Window;
 struct SDL_Surface;
@@ -52,6 +54,8 @@ namespace dae
 		Mesh* m_pMesh;
 		Mesh* m_pMeshCombustions;
 
+		MaterialVehicle* m_pVehicleMaterial;
+		MaterialCombustion* m_pCombustionMat;
 		
 		
 

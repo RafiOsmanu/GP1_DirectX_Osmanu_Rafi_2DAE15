@@ -45,6 +45,23 @@ SamplerState samAnisotropic
 	AddressV = Wrap;//or mirror. clamp, border
 };
 
+RasterizerState gRasterizerState
+{
+    CullMode = back;
+    FrontCounterClockwise = false;
+};
+BlendState gBlendState
+{
+    BlendEnable[0] = false;
+};
+
+DepthStencilState gDepthStencilState
+{
+    DepthEnable = true;
+    DepthWriteMask = all;
+    StencilEnable = true;
+};
+
 //------------------------------------------------------------------
 // Input/Output Structs
 //------------------------------------------------------------------
@@ -170,6 +187,9 @@ technique11 Techniques
 {
 	pass p0
 	{
+        SetRasterizerState(gRasterizerState);
+        SetDepthStencilState(gDepthStencilState, 0);
+        SetBlendState(gBlendState, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xFFFFFFFF);
 		SetVertexShader(CompileShader(vs_5_0, VS()));
 		SetGeometryShader(NULL);
 		SetPixelShader(CompileShader(ps_5_0, PS_Point()));
@@ -177,6 +197,9 @@ technique11 Techniques
 
 	pass p1
 	{
+        SetRasterizerState(gRasterizerState);
+        SetDepthStencilState(gDepthStencilState, 0);
+        SetBlendState(gBlendState, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xFFFFFFFF);
 		SetVertexShader(CompileShader(vs_5_0, VS()));
 		SetGeometryShader(NULL);
 		SetPixelShader(CompileShader(ps_5_0, PS_Linear()));
@@ -184,6 +207,9 @@ technique11 Techniques
 
 	pass p2
 	{
+        SetRasterizerState(gRasterizerState);
+        SetDepthStencilState(gDepthStencilState, 0);
+        SetBlendState(gBlendState, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xFFFFFFFF);
 		SetVertexShader(CompileShader(vs_5_0, VS()));
 		SetGeometryShader(NULL);
 		SetPixelShader(CompileShader(ps_5_0, PS_Anisotropic()));

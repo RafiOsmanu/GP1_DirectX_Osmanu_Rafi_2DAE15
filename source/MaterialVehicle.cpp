@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "MaterialVehicle.h"
+#include "Texture.h"
 
 
 namespace dae
@@ -10,18 +11,13 @@ namespace dae
 		SetResourceVariable();
 		
 		SetTexture(pDevice, m_pDiffuseMapVariable, "Resources/vehicle_diffuse.png");
-		SetTexture(pDevice, m_pDiffuseMapVariable, "Resources/vehicle_normal.png");
-		SetTexture(pDevice, m_pDiffuseMapVariable, "Resources/vehicle_specular.png");
-		SetTexture(pDevice, m_pDiffuseMapVariable, "Resources/vehicle_gloss.png");
+		SetTexture(pDevice, m_pNormalMapVariable, "Resources/vehicle_normal.png");
+		SetTexture(pDevice, m_pSpecularMapVariable, "Resources/vehicle_specular.png");
+		SetTexture(pDevice, m_pGlossinessMapVariable, "Resources/vehicle_gloss.png");
 	}
 
 	MaterialVehicle::~MaterialVehicle()
 	{
-		m_pEffect->Release();
-		m_pDiffuseMapVariable->Release();
-		m_pNormalMapVariable->Release();
-		m_pSpecularMapVariable->Release();
-		m_pGlossinessMapVariable->Release();
 	}
 
 	void MaterialVehicle::SetResourceVariable()
@@ -55,12 +51,9 @@ namespace dae
 
 	void MaterialVehicle::SetTexture(ID3D11Device* pDevice, ID3DX11EffectShaderResourceVariable* pResourceVariable, const std::string& path)
 	{
-		std::unique_ptr<Texture> texture{};
-		texture->LoadFromFile(pDevice, path);
-
 		if (pResourceVariable)
 		{
-			pResourceVariable->SetResource(texture->GetResourceView());
+			pResourceVariable->SetResource(Texture::LoadFromFile(pDevice, path)->GetResourceView());
 		}
 	}
 }

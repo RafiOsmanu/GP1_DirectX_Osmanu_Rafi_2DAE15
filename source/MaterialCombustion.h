@@ -4,23 +4,18 @@
 #include "BaseMaterial.h"
 
 namespace dae {
-
-	class MaterialVehicle : public BaseMaterial
+	class MaterialCombustion : public BaseMaterial
 	{
 	public:
-		MaterialVehicle(ID3D11Device* pDevice, const std::wstring& assetFile);
-		virtual ~MaterialVehicle();
+		MaterialCombustion(ID3D11Device* pDevice, const std::wstring& assetFile);
+		virtual ~MaterialCombustion();
 
 	private:
 
 		void SetResourceVariable();
 		void SetTexture(ID3D11Device* pDevice, ID3DX11EffectShaderResourceVariable* pResourceVariable, const std::string& path);
-		
+
 		ID3DX11EffectShaderResourceVariable* m_pDiffuseMapVariable;
-		ID3DX11EffectShaderResourceVariable* m_pNormalMapVariable;
-		ID3DX11EffectShaderResourceVariable* m_pSpecularMapVariable;
-		ID3DX11EffectShaderResourceVariable* m_pGlossinessMapVariable;
 	};
 }
-
 
